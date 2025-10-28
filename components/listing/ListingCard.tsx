@@ -45,6 +45,12 @@ function ListingCard({
     [onAction, actionId, disabled]
   );
 
+  const handleDelete = async (id: string, e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    await fetch(`/api/listings/${id}`, { method: "DELETE" });
+    router.refresh();
+  };
+
   const price = useMemo(() => {
     if (reservation) {
       return reservation.totalPrice;
@@ -105,6 +111,14 @@ function ListingCard({
             small
             label={actionLabel}
             onClick={handleCancel}
+          />
+        )}
+        {/* Delete button for listing owner */}
+        {currentUser?.id === data.userId && (
+          <Button
+            label="Delete"
+            small
+            onClick={(e) => handleDelete(data.id, e)}
           />
         )}
       </div>

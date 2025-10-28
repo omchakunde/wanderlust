@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-require('dotenv').config(); // Load environment variables from .env
+require('dotenv').config();
 
 declare global {
   var prisma: PrismaClient | undefined;
