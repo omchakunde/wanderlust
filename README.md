@@ -11,19 +11,19 @@ Full Stack Airbnb Clone with Next.js 13 Tailwind-css, Prisma, MongoDB, NextAuth,
 <!-- Badges -->
 <a href="https://airbnb-sclone.vercel.app" target="_blank">![](https://img.shields.io/website-up-down-green-red/http/monip.org.svg)</a>
 ![](https://img.shields.io/badge/Maintained-Yes-indigo)
-![](https://img.shields.io/github/forks/SashenJayathilaka/Airbnb-Build.svg)
-![](https://img.shields.io/github/stars/SashenJayathilaka/Airbnb-Build.svg)
-![](https://img.shields.io/github/issues/SashenJayathilaka/Airbnb-Build)
-![](https://img.shields.io/github/last-commit/SashenJayathilaka/Airbnb-Build)
+![](https://img.shields.io/github/forks/omchakunde/wanderlust.svg)
+![](https://img.shields.io/github/stars/omchakunde/wanderlust.svg)
+![](https://img.shields.io/github/issues/omchakunde/wanderlust)
+![](https://img.shields.io/github/last-commit/omchakunde/wanderlust)
 
 <h4>
     <a href="https://abproject-sclone.vercel.app">View Demo</a>
   <span> · </span>
-    <a href="https://github.com/SashenJayathilaka/Airbnb-Build/blob/master/README.md">Documentation</a>
+    <a href="https://github.com/omchakunde/wanderlust/blob/master/README.md">Documentation</a>
   <span> · </span>
-    <a href="https://github.com/SashenJayathilaka/Airbnb-Build/issues">Report Bug</a>
+    <a href="https://github.com/omchakunde/wanderlust/issues">Report Bug</a>
   <span> · </span>
-    <a href="https://github.com/SashenJayathilaka/Airbnb-Build/issues">Request Feature</a>
+    <a href="https://github.com/omchakunde/wanderlust/issues">Request Feature</a>
   </h4>
 </div>
 
@@ -231,7 +231,7 @@ Add the `@tailwind` directives for each of Tailwind’s layers to your `./styles
 
 Install dependencies
 
-<a href="https://github.com/SashenJayathilaka/Airbnb-Build/blob/master/package.json" target="_blank">🔶 Dependency Info</a>
+<a href="https://github.com/omchakunde/wanderlust/blob/master/package.json" target="_blank">🔶 Dependency Info</a>
 
 <!-- Run Locally -->
 
@@ -242,7 +242,7 @@ Install dependencies
 Clone the project
 
 ```bash
-  git clone https://github.com/SashenJayathilaka/Airbnb-Build.git
+  git clone https://github.com/omchakunde/wanderlust.git
 ```
 
 change directory
@@ -304,7 +304,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 Sashen - [@twitter_handle](https://twitter.com/SashenHasinduJ) - sashenjayathilaka95@gmail.com
 
-Project Link: [https://github.com/SashenJayathilaka/Airbnb-Build.git](https://github.com/SashenJayathilaka/Airbnb-Build.git)
+Project Link: [https://github.com/omchakunde/wanderlust.git](https://github.com/omchakunde/wanderlust.git)
 
 <br />
 
@@ -315,9 +315,3 @@ Project Link: [https://github.com/SashenJayathilaka/Airbnb-Build.git](https://gi
 <br />
 
 <div align="center">Don't forget to leave a star ⭐️</div>
-#   w a n d e r l u s t  
- #   w a n d e r l u s t  
- #   w a n d e r l u s t  
- #   w a n d e r l u s t  
- #   w a n d e r l u s t  
- 
