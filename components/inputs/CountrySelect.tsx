@@ -1,7 +1,8 @@
 "use client";
 
 import useCountries from "@/hook/useCountries";
-import Select from "react-select";
+import Select, { SingleValue, Theme } from "react-select";
+
 import Flag from "react-world-flags";
 
 export type CountrySelectValue = {
@@ -22,18 +23,24 @@ function CountrySelect({ value, onChange }: Props) {
 
   return (
     <div>
-      <Select
+      <Select<CountrySelectValue>
         placeholder="Anywhere"
         isClearable
         options={getAll()}
         value={value}
-        onChange={(value) => onChange(value as CountrySelectValue)}
-        formatOptionLabel={(option: any) => (
+        onChange={(value: SingleValue<CountrySelectValue>) => {
+          if (value) {
+            onChange(value);
+          }
+        }}
+        formatOptionLabel={(option: CountrySelectValue) => (
           <div className="flex flex-row items-center gap-3">
             <Flag code={option.value} className="w-5" />
             <div>
               {option.label},
-              <span className="text-neutral-500 ml-1">{option.region}</span>
+              <span className="text-neutral-500 ml-1">
+                {option.region}
+              </span>
             </div>
           </div>
         )}
@@ -42,7 +49,8 @@ function CountrySelect({ value, onChange }: Props) {
           input: () => "text-lg",
           option: () => "text-lg",
         }}
-        theme={(theme) => ({
+       theme={(theme: Theme) => ({
+
           ...theme,
           borderRadius: 6,
           colors: {
