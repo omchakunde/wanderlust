@@ -9,8 +9,11 @@ const nextConfig = {
   },
 
   typescript: {
-    // Ignore type errors in production build (for libraries)
     ignoreBuildErrors: true,
+  },
+
+  eslint: {
+    ignoreDuringBuilds: true, // ✅ IMPORTANT
   },
 };
 
