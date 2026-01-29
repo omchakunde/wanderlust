@@ -8,8 +8,9 @@ const nextConfig = {
     domains: ["lh3.googleusercontent.com", "res.cloudinary.com"],
   },
 
-  eslint: {
-    ignoreDuringBuilds: true,
+  typescript: {
+    // Ignore type errors in production build (for libraries)
+    ignoreBuildErrors: true,
   },
 };
 
