@@ -1,8 +1,10 @@
-export const dynamic = "force-dynamic";
-
 import getCurrentUser from "@/app/actions/getCurrentUser";
 import prisma from "@/lib/prismadb";
 import { NextResponse } from "next/server";
+
+// VERY IMPORTANT
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 interface IParams {
   listingId?: string;
@@ -13,6 +15,10 @@ export async function POST(
   request: Request,
   { params }: { params: IParams }
 ) {
+  if (process.env.NODE_ENV === "production" && !process.env.DATABASE_URL) {
+    return NextResponse.json({}, { status: 200 });
+  }
+
   try {
     const currentUser = await getCurrentUser();
 
@@ -20,7 +26,7 @@ export async function POST(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { listingId } = params;
+    const listingId = params?.listingId;
 
     if (!listingId) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
@@ -42,9 +48,10 @@ export async function POST(
 
     return NextResponse.json(user);
   } catch (error) {
-    console.error("POST Favorite Error:", error);
+    console.error(error);
+
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: "Server Error" },
       { status: 500 }
     );
   }
@@ -55,6 +62,10 @@ export async function DELETE(
   request: Request,
   { params }: { params: IParams }
 ) {
+  if (process.env.NODE_ENV === "production" && !process.env.DATABASE_URL) {
+    return NextResponse.json({}, { status: 200 });
+  }
+
   try {
     const currentUser = await getCurrentUser();
 
@@ -62,7 +73,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { listingId } = params;
+    const listingId = params?.listingId;
 
     if (!listingId) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
@@ -83,9 +94,10 @@ export async function DELETE(
 
     return NextResponse.json(user);
   } catch (error) {
-    console.error("DELETE Favorite Error:", error);
+    console.error(error);
+
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: "Server Error" },
       { status: 500 }
     );
   }
