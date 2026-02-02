@@ -1,9 +1,8 @@
-import getCurrentUser from "@/app/actions/getCurrentUser";
 import prisma from "@/lib/prismadb";
 import { NextResponse } from "next/server";
 
 /**
- * Prevent Next.js from pre-building this route
+ * Prevent static build
  */
 export const dynamic = "force-dynamic";
 
@@ -17,6 +16,11 @@ export async function POST(
   { params }: { params: IParams }
 ) {
   try {
+    // Lazy import (IMPORTANT)
+    const { default: getCurrentUser } = await import(
+      "@/app/actions/getCurrentUser"
+    );
+
     const currentUser = await getCurrentUser();
 
     if (!currentUser) {
@@ -60,6 +64,11 @@ export async function DELETE(
   { params }: { params: IParams }
 ) {
   try {
+    // Lazy import (IMPORTANT)
+    const { default: getCurrentUser } = await import(
+      "@/app/actions/getCurrentUser"
+    );
+
     const currentUser = await getCurrentUser();
 
     if (!currentUser) {
