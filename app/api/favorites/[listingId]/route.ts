@@ -6,28 +6,22 @@ interface IParams {
   listingId?: string;
 }
 
-// Prevent build-time crash
-const isBuildTime = process.env.NODE_ENV === "production" && !process.env.VERCEL_ENV;
-
+// ================= POST =================
 export async function POST(
   request: Request,
   { params }: { params: IParams }
 ) {
   try {
-    if (isBuildTime) {
-      return NextResponse.json({});
-    }
-
     const currentUser = await getCurrentUser();
 
     if (!currentUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return new NextResponse("Unauthorized", { status: 401 });
     }
 
     const { listingId } = params;
 
     if (!listingId || typeof listingId !== "string") {
-      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+      return new NextResponse("Invalid ID", { status: 400 });
     }
 
     const favoriteIds = [
@@ -45,34 +39,37 @@ export async function POST(
     });
 
     return NextResponse.json(user);
+
   } catch (error) {
-    console.error("[FAVORITES_POST]", error);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    console.error("POST FAVORITE ERROR:", error);
+
+    return new NextResponse("Server Error", {
+      status: 500,
+    });
   }
 }
 
+// ================= DELETE =================
 export async function DELETE(
   request: Request,
   { params }: { params: IParams }
 ) {
   try {
-    if (isBuildTime) {
-      return NextResponse.json({});
-    }
-
     const currentUser = await getCurrentUser();
 
     if (!currentUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return new NextResponse("Unauthorized", { status: 401 });
     }
 
     const { listingId } = params;
 
     if (!listingId || typeof listingId !== "string") {
-      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+      return new NextResponse("Invalid ID", { status: 400 });
     }
 
-    const favoriteIds = (currentUser.favoriteIds || []).filter(
+    let favoriteIds = [...(currentUser.favoriteIds || [])];
+
+    favoriteIds = favoriteIds.filter(
       (id) => id !== listingId
     );
 
@@ -86,8 +83,12 @@ export async function DELETE(
     });
 
     return NextResponse.json(user);
+
   } catch (error) {
-    console.error("[FAVORITES_DELETE]", error);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    console.error("DELETE FAVORITE ERROR:", error);
+
+    return new NextResponse("Server Error", {
+      status: 500,
+    });
   }
 }
