@@ -1,35 +1,26 @@
-import getCurrentUser from "@/app/actions/getCurrentUser";
-import prisma from "@/lib/prismadb";
 import { NextResponse } from "next/server";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
-  const currentUser = await getCurrentUser();
+  try {
+    // Lazy imports (important for Vercel build)
+    const { default: getCurrentUser } = await import(
+      "@/app/actions/getCurrentUser"
+    );
 
-  if (!currentUser) {
-    return NextResponse.error();
-  }
+    const { default: prisma } = await import("@/lib/prismadb");
 
-  const body = await request.json();
-  const {
-    title,
-    description,
-    imageSrc,
-    category,
-    roomCount,
-    bathroomCount,
-    guestCount,
-    location,
-    price,
-  } = body;
+    const currentUser = await getCurrentUser();
 
-  Object.keys(body).forEach((value: any) => {
-    if (!body[value]) {
-      NextResponse.error();
+    if (!currentUser) {
+      return new NextResponse("Unauthorized", { status: 401 });
     }
-  });
 
-  const listen = await prisma.listing.create({
-    data: {
+    const body = await request.json();
+
+    const {
       title,
       description,
       imageSrc,
@@ -37,11 +28,32 @@ export async function POST(request: Request) {
       roomCount,
       bathroomCount,
       guestCount,
-      locationValue: location.value,
-      price: parseInt(price, 10),
-      userId: currentUser.id,
-    },
-  });
+      location,
+      price,
+    } = body;
 
-  return NextResponse.json(listen);
+    const listing = await prisma.listing.create({
+      data: {
+        title,
+        description,
+        imageSrc,
+        category,
+        roomCount,
+        bathroomCount,
+        guestCount,
+        locationValue: location?.value,
+        price: parseInt(price, 10),
+        userId: currentUser.id,
+      },
+    });
+
+    return NextResponse.json(listing);
+
+  } catch (error) {
+    console.error("LISTINGS POST ERROR:", error);
+
+    return new NextResponse("Internal Server Error", {
+      status: 500,
+    });
+  }
 }
