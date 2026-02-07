@@ -1,9 +1,9 @@
-import prisma from "@/lib/prismadb";
 import { NextResponse } from "next/server";
 
 /**
- * Prevent static build
+ * Force server runtime (important for Prisma)
  */
+export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 interface IParams {
@@ -16,10 +16,13 @@ export async function POST(
   { params }: { params: IParams }
 ) {
   try {
-    // Lazy import (IMPORTANT)
+    // Lazy import auth
     const { default: getCurrentUser } = await import(
       "@/app/actions/getCurrentUser"
     );
+
+    // Lazy import prisma
+    const { default: prisma } = await import("@/lib/prismadb");
 
     const currentUser = await getCurrentUser();
 
@@ -64,10 +67,13 @@ export async function DELETE(
   { params }: { params: IParams }
 ) {
   try {
-    // Lazy import (IMPORTANT)
+    // Lazy import auth
     const { default: getCurrentUser } = await import(
       "@/app/actions/getCurrentUser"
     );
+
+    // Lazy import prisma
+    const { default: prisma } = await import("@/lib/prismadb");
 
     const currentUser = await getCurrentUser();
 
