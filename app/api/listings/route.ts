@@ -1,21 +1,19 @@
+import getCurrentUser from "@/app/actions/getCurrentUser";
+import prisma from "@/lib/prismadb";
 import { NextResponse } from "next/server";
 
-export const runtime = "nodejs";
+// ✅ Prevent build-time execution
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   try {
-    // Lazy imports (important for Vercel build)
-    const { default: getCurrentUser } = await import(
-      "@/app/actions/getCurrentUser"
-    );
-
-    const { default: prisma } = await import("@/lib/prismadb");
-
     const currentUser = await getCurrentUser();
 
     if (!currentUser) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
     }
 
     const body = await request.json();
@@ -41,7 +39,7 @@ export async function POST(request: Request) {
         roomCount,
         bathroomCount,
         guestCount,
-        locationValue: location?.value,
+        locationValue: location.value,
         price: parseInt(price, 10),
         userId: currentUser.id,
       },
@@ -50,10 +48,11 @@ export async function POST(request: Request) {
     return NextResponse.json(listing);
 
   } catch (error) {
-    console.error("LISTINGS POST ERROR:", error);
+    console.error("LISTING POST ERROR:", error);
 
-    return new NextResponse("Internal Server Error", {
-      status: 500,
-    });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
