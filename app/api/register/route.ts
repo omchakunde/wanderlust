@@ -1,14 +1,18 @@
 import prisma from "@/lib/prismadb";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 
+/**
+ * Fix Vercel + Undici crash
+ */
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    // ✅ Clone request to avoid undici bug
+    const req = request.clone();
+    const body = await req.json();
 
     const { email, name, password } = body;
 
@@ -19,20 +23,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if user exists
+    // Check if user already exists
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
 
     if (existingUser) {
       return NextResponse.json(
-        { error: "Email already registered" },
+        { error: "Email already exists" },
         { status: 400 }
       );
     }
 
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 12);
 
+    // Create user
     const user = await prisma.user.create({
       data: {
         email,
