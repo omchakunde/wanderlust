@@ -1,5 +1,5 @@
 import prisma from "@/lib/prismadb";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -12,6 +12,7 @@ export async function POST(request: Request) {
       return new NextResponse("Missing fields", { status: 400 });
     }
 
+    // ✅ Hash password (Vercel safe)
     const hashedPassword = await bcrypt.hash(password, 12);
 
     const user = await prisma.user.create({
