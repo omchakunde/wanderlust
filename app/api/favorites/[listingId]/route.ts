@@ -1,8 +1,5 @@
 import { NextResponse } from "next/server";
 
-/**
- * Prevent build-time execution
- */
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -10,18 +7,16 @@ interface IParams {
   listingId?: string;
 }
 
-// ================= DELETE =================
-export async function DELETE(
+/* ================= ADD TO FAVORITES ================= */
+export async function POST(
   request: Request,
   { params }: { params: IParams }
 ) {
   try {
-    // Lazy import auth
     const { default: getCurrentUser } = await import(
       "@/app/actions/getCurrentUser"
     );
 
-    // Lazy import prisma
     const { default: prisma } = await import("@/lib/prismadb");
 
     const currentUser = await getCurrentUser();
@@ -32,24 +27,75 @@ export async function DELETE(
 
     const { listingId } = params;
 
-    if (!listingId || typeof listingId !== "string") {
+    if (!listingId) {
       return new NextResponse("Invalid ID", { status: 400 });
     }
 
-    const listing = await prisma.listing.deleteMany({
+    const favoriteIds = [
+      ...(currentUser.favoriteIds || []),
+      listingId,
+    ];
+
+    const user = await prisma.user.update({
       where: {
-        id: listingId,
-        userId: currentUser.id,
+        id: currentUser.id,
+      },
+      data: {
+        favoriteIds,
       },
     });
 
-    return NextResponse.json(listing);
+    return NextResponse.json(user);
 
   } catch (error) {
-    console.error("DELETE LISTING ERROR:", error);
+    console.error("FAVORITE POST ERROR:", error);
 
-    return new NextResponse("Server Error", {
-      status: 500,
+    return new NextResponse("Server Error", { status: 500 });
+  }
+}
+
+/* ================= REMOVE FROM FAVORITES ================= */
+export async function DELETE(
+  request: Request,
+  { params }: { params: IParams }
+) {
+  try {
+    const { default: getCurrentUser } = await import(
+      "@/app/actions/getCurrentUser"
+    );
+
+    const { default: prisma } = await import("@/lib/prismadb");
+
+    const currentUser = await getCurrentUser();
+
+    if (!currentUser) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    const { listingId } = params;
+
+    if (!listingId) {
+      return new NextResponse("Invalid ID", { status: 400 });
+    }
+
+    const favoriteIds = (currentUser.favoriteIds || []).filter(
+      (id: string) => id !== listingId
+    );
+
+    const user = await prisma.user.update({
+      where: {
+        id: currentUser.id,
+      },
+      data: {
+        favoriteIds,
+      },
     });
+
+    return NextResponse.json(user);
+
+  } catch (error) {
+    console.error("FAVORITE DELETE ERROR:", error);
+
+    return new NextResponse("Server Error", { status: 500 });
   }
 }
